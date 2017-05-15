@@ -18,6 +18,9 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
     public int currentPlayer;
     public int selectedRow, selectedCol;
     private ArrayList<Move> legalMoves = new ArrayList<>();
+    boolean AI_White = false;
+    boolean AI_Black = true;
+    public AI ai = new AI(legalMoves);
 
     public CheckersCanvas() {
         // Constructor. Create the buttons and lable. Listen for mouse
@@ -121,7 +124,6 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
          * If the user clicked on a square where the selected piece can be
 		 * legally moved, then make the move and return.
 		 */
-
         for (int i = 0; i < legalMoves.size(); i++)
             if (legalMoves.get(i).getFromRow() == selectedRow && legalMoves.get(i).getFromCol() == selectedCol
                     && legalMoves.get(i).getToRow() == row && legalMoves.get(i).getToCol() == col) {
@@ -140,7 +142,7 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
     } // end doClickSquare()
 
     public void doMakeMove(Move move) {
-        // Thiis is called when the current player has chosen the specified
+        // This is called when the current player has chosen the specified
         // move. Make the move, and then either end or continue the game
         // appropriately.
 
@@ -218,11 +220,12 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
                 selectedCol = legalMoves.get(0).getFromCol();
             }
         }
-
-		/* Make sure the board is redrawn in its new state. */
-
+        /* Make sure the board is redrawn in its new state. */
         repaint();
-
+        if ((AI_Black && this.currentPlayer < 0) || (AI_White && this.currentPlayer > 0)) {
+            legalMoves = board.getLegalMoves(currentPlayer);
+            doMakeMove(this.ai.chooseMoveRandom(legalMoves));
+        }
     } // end doMakeMove();
 
     public void update(Graphics g) {
