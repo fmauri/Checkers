@@ -7,9 +7,11 @@ import java.util.ArrayList;
  */
 public class MoveScheduler {
     private Board board = new Board();
+    private Board test = new Board();
 
     public MoveScheduler() {
         this.board.newGame();
+        this.test.newGame();
     }
 
     public void makeMove(Move move) {
@@ -119,5 +121,19 @@ public class MoveScheduler {
 
     public Board getBoard() {
         return board;
+    }
+
+    public void setBoard(Board b) {
+        this.board = b;
+    }
+
+    public Board copyBoard(Board b) {
+        Board copy = new Board();
+        for (int i = 0; i < b.getBoard().length; i++) {
+            for (int j = 0; j < b.getBoard()[0].length; j++) {
+                copy.setValueAt(i, j, b.getValueAt(i, j));
+            }
+        }
+        return copy;
     }
 }
