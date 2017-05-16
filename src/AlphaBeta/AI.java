@@ -39,24 +39,33 @@ public class AI {
                 forEnemy.setBoard(this.game.copyBoard(forMe.getBoard()));
                 forEnemy.makeMove(e);
                 ArrayList<Move> MyThirdMoves = forEnemy.getLegalMoves(player);
-                for (Move t : MyThirdMoves) {
-                    thirdMe.add(new Node(t, ScoreMove(t)));
+                if (MyThirdMoves.isEmpty()) {
+                    continue;
                 }
-                secondEnemy.add(new Node(e, ScoreMove(e) - getMax(thirdMe).key));
+                for (Move t : MyThirdMoves) {
+                    thirdMe.add(new Node(t, ScoreMove(t, forEnemy, player)));
+                }
+                secondEnemy.add(new Node(e, ScoreMove(e, forEnemy, -player) - getMaxKey(thirdMe)));
             }
-            firstMe.add(new Node(m, ScoreMove(m) - getMax(secondEnemy).key));
+            firstMe.add(new Node(m, ScoreMove(m, forMe, player) - getMaxKey(secondEnemy)));
         }
-        return getMax(firstMe).move;
+        return getMaxNode(firstMe).move;
     }
 
-    public int ScoreMove(Move move) {
+    public int ScoreMove(Move move, MoveScheduler game, int player) {
         int value = 0;
         if (move.isEat()) {
-            int eaten = this.game.getBoard().getValueAt(Math.abs(move.getFromRow() - move.getToRow()), Math.abs(move.getFromCol() - move.getToCol()));
-            if (eaten == Status.WHITE_PIECE_PROMOTED.getNumVal() || eaten == Status.BLACK_PIECE_PROMOTED.getNumVal()) {
-                value += 3;
-            } else {
-                value += 2; //maybe problem due to multiple eating
+            int eaten;
+            ArrayList<Move> multipleEat;
+            while (move != null) {
+                eaten = this.game.getBoard().getValueAt(Math.abs(move.getFromRow() - move.getToRow()), Math.abs(move.getFromCol() - move.getToCol()));
+                if (eaten == Status.WHITE_PIECE_PROMOTED.getNumVal() || eaten == Status.BLACK_PIECE_PROMOTED.getNumVal()) {
+                    value += 3;
+                } else {
+                    value += 2;
+                }
+                multipleEat = game.getLegalJumps(player, move.getToRow(), move.getToCol());
+                move = multipleEat.isEmpty() ? null : multipleEat.get(0);
             }
         } else {
             int piece = this.game.getBoard().getValueAt(move.getFromRow(), move.getFromCol());
@@ -68,7 +77,17 @@ public class AI {
         return value;
     }
 
-    public Node getMax(ArrayList<Node> moves) {
+    public int getMaxKey(ArrayList<Node> moves) {
+        int max = 0;
+        for (Node n : moves) {
+            if (max < n.key) {
+                max = n.key;
+            }
+        }
+        return max;
+    }
+
+    public Node getMaxNode(ArrayList<Node> moves) {
         Node max = moves.get(0);
         for (Node n : moves) {
             if (max.key < n.key) {

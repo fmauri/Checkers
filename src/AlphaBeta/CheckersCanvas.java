@@ -19,7 +19,7 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
     public int selectedRow, selectedCol;
     private ArrayList<Move> legalMoves = new ArrayList<>();
     boolean AI_White = false;
-    boolean AI_Black = false;
+    boolean AI_Black = true;
     public AI ai;
 
     public CheckersCanvas() {
@@ -120,9 +120,13 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
                 } else {
                     message.setText("BLACK:  You must continue jumping.");
                 }
-                selectedRow = move.getToRow(); // Since only one piece can be moved, select it.
+                selectedRow = move.getToRow();
                 selectedCol = move.getToCol();
                 repaint();
+                if ((AI_Black && this.currentPlayer < 0) || (AI_White && this.currentPlayer > 0)) {
+                    doMakeMove(this.ai.alphaBeta(legalMoves, this.currentPlayer));
+                    //doMakeMove(this.ai.chooseMoveRandom(legalMoves));
+                }
                 return;
             }
         }
@@ -132,10 +136,7 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
             if (legalMoves.isEmpty()) {
                 gameOver("BLACK has no moves.  White wins.");
             } else if (legalMoves.get(0).isEat()) {
-                if ((AI_Black && this.currentPlayer < 0) || (AI_White && this.currentPlayer > 0)) {
-                    doMakeMove(this.ai.alphaBeta(legalMoves, this.currentPlayer));
-                    //doMakeMove(this.ai.chooseMoveRandom(legalMoves));
-                }
+
                 message.setText("BLACK:  Make your move.  You must jump.");
             } else {
                 message.setText("BLACK:  Make your move.");
@@ -146,10 +147,6 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
             if (legalMoves.isEmpty())
                 gameOver("White has no moves.  BLACK wins.");
             else if (legalMoves.get(0).isEat()) {
-                if ((AI_Black && this.currentPlayer < 0) || (AI_White && this.currentPlayer > 0)) {
-                    doMakeMove(this.ai.alphaBeta(legalMoves, this.currentPlayer));
-                    //doMakeMove(this.ai.chooseMoveRandom(legalMoves));
-                }
                 message.setText("White:  Make your move.  You must jump.");
             } else {
                 message.setText("White:  Make your move.");
