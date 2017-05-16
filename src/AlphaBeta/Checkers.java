@@ -9,7 +9,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 
-public class CheckersCanvas extends Canvas implements ActionListener, MouseListener {
+public class Checkers extends Canvas implements ActionListener, MouseListener {
     public JButton resignButton;
     public JButton newGameButton;
     public Label message;
@@ -22,7 +22,7 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
     boolean AI_Black = true;
     public AI ai;
 
-    public CheckersCanvas() {
+    public Checkers() {
         setBackground(Color.black);
         addMouseListener(this);
         setFont(new Font("Serif", Font.BOLD, 14));
@@ -49,10 +49,10 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
             message.setText("Finish the current game first!");
             return;
         }
-        board.getBoard().newGame(); // Set up the pieces.
-        currentPlayer = Status.WHITE.getNumVal(); // White moves first.
-        legalMoves = board.getLegalMoves(currentPlayer); // Get White's legal moves.
-        selectedRow = -1; // White has not yet selected a piece to move.
+        board.getBoard().newGame();
+        currentPlayer = Status.WHITE.getNumVal();
+        legalMoves = board.getLegalMoves(currentPlayer);
+        selectedRow = -1;
         message.setText("White: Make your move.");
         gameInProgress = true;
         newGameButton.setEnabled(false);

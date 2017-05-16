@@ -11,7 +11,7 @@ public class GUI extends Applet{
 
         setLayout(null);
         setBackground(new Color(0,100,150));
-        CheckersCanvas game = new CheckersCanvas();
+        Checkers game = new Checkers();
         add(game);
 
         game.newGameButton.setBackground(Color.lightGray);
