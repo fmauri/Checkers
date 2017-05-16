@@ -4,15 +4,20 @@ package AlphaBeta;
  * Created by Francesco Mauri on 5/15/2017.
  */
 public class Node {
-    int key;
-    Move move;
-    Node leftChild;
-    Node rightChild;
-    Node parent;
+    private int key;
+    private Move move;
 
     Node(Move m, int key) {
         this.key = key;
         this.move = m;
+    }
+
+    public int getKey() {
+        return this.key;
+    }
+
+    public Move getMove() {
+        return this.move;
     }
 
     public String toString() {

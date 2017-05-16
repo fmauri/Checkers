@@ -9,15 +9,9 @@ import java.applet.*;
 public class GUI extends Applet{
     public void init() {
 
-        setLayout(null);  // I will do the layout myself.
-
-        setBackground(new Color(0,150,0));  // Dark green background.
-
-      /* Create the components and add them to the applet. */
-
+        setLayout(null);
+        setBackground(new Color(0,100,150));
         CheckersCanvas game = new CheckersCanvas();
-        // Note: The constructor creates the buttons game.resignButton
-        // and game.newGameButton and the Label game.message.
         add(game);
 
         game.newGameButton.setBackground(Color.lightGray);
@@ -26,7 +20,7 @@ public class GUI extends Applet{
         game.resignButton.setBackground(Color.lightGray);
         add(game.resignButton);
 
-        game.message.setForeground(Color.green);
+        game.message.setForeground(new Color(5,188,23));
         game.message.setFont(new Font("Serif", Font.BOLD, 14));
         add(game.message);
 
