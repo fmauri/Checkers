@@ -16,7 +16,7 @@ public class Move {
     }
 
     boolean isEat() {
-        return (fromRow - toRow == 2 || fromCol - toCol == 2);
+        return (Math.abs(fromRow - toRow) == 2);
     }
 
     public int getFromRow() {

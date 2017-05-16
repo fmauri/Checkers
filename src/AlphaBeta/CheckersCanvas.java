@@ -19,13 +19,10 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
     public int selectedRow, selectedCol;
     private ArrayList<Move> legalMoves = new ArrayList<>();
     boolean AI_White = false;
-    boolean AI_Black = true;
+    boolean AI_Black = false;
     public AI ai;
 
     public CheckersCanvas() {
-        // Constructor. Create the buttons and lable. Listen for mouse
-        // clicks and for clicks on the buttons. Create the board and
-        // start the first game.
         setBackground(Color.black);
         addMouseListener(this);
         setFont(new Font("Serif", Font.BOLD, 14));
@@ -40,7 +37,6 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
     }
 
     public void actionPerformed(ActionEvent evt) {
-        // Respond to user's click on one of the two buttons.
         Object src = evt.getSource();
         if (src == newGameButton)
             doNewGame();
@@ -49,7 +45,6 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
     }
 
     void doNewGame() {
-        // Begin a new game.
         if (gameInProgress) {
             message.setText("Finish the current game first!");
             return;
@@ -66,7 +61,6 @@ public class CheckersCanvas extends Canvas implements ActionListener, MouseListe
     }
 
     public void doResign() {
-        // Current player resigns. Game ends. Opponent wins.
         if (!gameInProgress) {
             message.setText("There is no game in progress!");
             return;

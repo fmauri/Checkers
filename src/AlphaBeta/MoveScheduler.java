@@ -21,7 +21,7 @@ public class MoveScheduler {
     public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
         this.board.setValueAt(toRow, toCol, this.board.getValueAt(fromRow, fromCol));
         this.board.setValueAt(fromRow, fromCol, Status.EMPTY.getNumVal());
-        if (fromRow - toRow == 2 || fromRow - toRow == -2) {
+        if (Math.abs(fromRow - toRow) == 2) {
             int jumpedRow = (fromRow + toRow) / 2;
             int jumpedCol = (fromCol + toCol) / 2;
             this.board.setValueAt(jumpedRow, jumpedCol, Status.EMPTY.getNumVal());
@@ -67,22 +67,13 @@ public class MoveScheduler {
         if (r3 < 0 || r3 >= 8 || c3 < 0 || c3 >= 8 || this.board.getValueAt(r3, c3) != Status.EMPTY.getNumVal()) {
             return false;
         }
-        if (player > 0) {
-            if (this.board.getValueAt(r1, c1) == Status.WHITE.getNumVal() && r3 > r1) {
-                return false; // Regular white piece can only move up.
-            }
-            if (this.board.getValueAt(r2, c2) != Status.BLACK.getNumVal()
-                    && this.board.getValueAt(r2, c2) != Status.BLACK_PIECE_PROMOTED.getNumVal()) {
-                return false; // There is no black piece to jump.
-            }
-        } else {
-            if (this.board.getValueAt(r1, c1) == Status.BLACK.getNumVal() && r3 < r1) {
-                return false; // Regular black piece can only move downn.
-            }
-            if (this.board.getValueAt(r2, c2) != Status.WHITE.getNumVal()
-                    && this.board.getValueAt(r2, c2) != Status.WHITE_PIECE_PROMOTED.getNumVal()) {
-                return false; // There is no black piece to jump.
-            }
+        if ((player > 0) && ((this.board.getValueAt(r1, c1) == Status.WHITE.getNumVal() && r3 > r1)
+                || this.board.getValueAt(r2, c2) >= 0)) {
+            return false; // Regular white piece can only move up or you are not eating an enemy
+        }
+        if ((player < 0) && ((this.board.getValueAt(r1, c1) == Status.BLACK.getNumVal() && r3 < r1)
+                || this.board.getValueAt(r2, c2) <= 0)) {
+            return false; // Regular black piece can only move down or you are not eating an enemy.
         }
         return true;
     }
