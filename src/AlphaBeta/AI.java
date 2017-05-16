@@ -36,7 +36,7 @@ public class AI {
             forMe.makeMove(m);
             ArrayList<Move> enemyMoves = forMe.getLegalMoves(-player);
             for (Move e : enemyMoves) {
-                forEnemy.setBoard(this.game.copyBoard(forMe.getBoard()));
+                forEnemy.setBoard(forMe.copyBoard(forMe.getBoard()));
                 forEnemy.makeMove(e);
                 ArrayList<Move> MyThirdMoves = forEnemy.getLegalMoves(player);
                 if (MyThirdMoves.isEmpty()) {
@@ -50,6 +50,29 @@ public class AI {
             firstMe.add(new Node(m, ScoreMove(m, forMe, player) - getMaxKey(secondEnemy)));
         }
         return getMaxNode(firstMe).move;
+    }
+
+    public Node alphaBetaRecursive(ArrayList<Move> moves, int player, int round, MoveScheduler baseGame) {
+        MoveScheduler simulatorGame = new MoveScheduler();
+        ArrayList<Node> scoredMoves = new ArrayList<>();
+        Node best;
+        for (Move m : moves) {
+            if (round > 0) {
+                simulatorGame.setBoard(baseGame.copyBoard(baseGame.getBoard()));
+                simulatorGame.makeMove(m);
+                ArrayList<Move> nextRound = simulatorGame.getLegalMoves(-player);
+                if (nextRound.isEmpty()) {
+                    scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, -player)));
+                    continue;
+                }
+                round--;
+                best = alphaBetaRecursive(nextRound, -player, round, simulatorGame);
+                scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, -player) - best.key));
+            } else {
+                scoredMoves.add(new Node(m, ScoreMove(m, baseGame, player)));
+            }
+        }
+        return getMaxNode(scoredMoves);
     }
 
     public int ScoreMove(Move move, MoveScheduler game, int player) {

@@ -39,4 +39,19 @@ public class Board {
     public int[][] getBoard() {
         return board;
     }
+
+    public boolean isBlackWinning() {
+        int w = 0;
+        int b = 0;
+        for (int row = 0; row < this.board.length; row++) {
+            for (int col = 0; col < this.board[row].length; col++) {
+                if(this.board[row][col]>0){
+                    w++;
+                }else{
+                    b++;
+                }
+            }
+        }
+        return b>w;
+    }
 }
