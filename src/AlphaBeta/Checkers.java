@@ -17,10 +17,10 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
     public boolean gameInProgress;
     public int currentPlayer;
     public int selectedRow, selectedCol;
-    private ArrayList<Move> legalMoves = new ArrayList<>();
-    boolean AI_White = false;
-    boolean AI_Black = true;
-    public AI ai;
+    public ArrayList<Move> legalMoves = new ArrayList<>();
+    private boolean AI_White = false;
+    private boolean AI_Black = true;
+    private AI ai;
 
     public Checkers() {
         setBackground(Color.black);
@@ -44,7 +44,7 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
             doResign();
     }
 
-    void doNewGame() {
+    private void doNewGame() {
         if (gameInProgress) {
             message.setText("Finish the current game first!");
             return;
@@ -60,7 +60,7 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
         repaint();
     }
 
-    public void doResign() {
+    private void doResign() {
         if (!gameInProgress) {
             message.setText("There is no game in progress!");
             return;
@@ -71,14 +71,14 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
             gameOver("Black resigns. White winds.");
     }
 
-    public void gameOver(String str) {
+    private void gameOver(String str) {
         message.setText(str);
         newGameButton.setEnabled(true);
         resignButton.setEnabled(false);
         gameInProgress = false;
     }
 
-    public void doClickSquare(int row, int col) {
+    private void doClickSquare(int row, int col) {
         for (int i = 0; i < legalMoves.size(); i++)
             if (legalMoves.get(i).getFromRow() == row && legalMoves.get(i).getFromCol() == col) {
                 selectedRow = row;
@@ -104,7 +104,7 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
 
     }
 
-    public void doMakeMove(Move move) {
+    private void doMakeMove(Move move) {
         board.makeMove(move);
         if (move.isEat()) {
             legalMoves = board.getLegalJumps(currentPlayer, move.getToRow(), move.getToCol());
@@ -121,7 +121,7 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
                     int rounds = 5;
                     if ((this.board.getBoard().isBlackWinning() && this.AI_White)
                             || (!this.board.getBoard().isBlackWinning() && this.AI_Black)) {
-                        rounds = 7;
+                        rounds = 9;
                     }
                     doMakeMove(this.ai.minMaxRecursive(legalMoves, this.currentPlayer, rounds, this.board).getMove());
                     //doMakeMove(this.ai.alphaBeta(legalMoves, this.currentPlayer));
@@ -170,7 +170,7 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
             int rounds = 5;
             if ((this.board.getBoard().isBlackWinning() && this.AI_White)
                     || (!this.board.getBoard().isBlackWinning() && this.AI_Black)) {
-                rounds = 7;
+                rounds = 9;
             }
             doMakeMove(this.ai.minMaxRecursive(legalMoves, this.currentPlayer, rounds, this.board).getMove());
             //doMakeMove(this.ai.alphaBeta(legalMoves, this.currentPlayer));
@@ -214,21 +214,20 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
         }
         if (gameInProgress) {
             g.setColor(Color.cyan);
-            for (int i = 0; i < legalMoves.size(); i++) {
-                g.drawRect(2 + legalMoves.get(i).getFromCol() * 20, 2 + legalMoves.get(i).getFromRow() * 20, 19, 19);
+            for (Move m : legalMoves) {
+                g.drawRect(2 + m.getFromCol() * 20, 2 + m.getFromRow() * 20, 19, 19);
             }
             if (selectedRow >= 0) {
                 g.setColor(Color.white);
                 g.drawRect(2 + selectedCol * 20, 2 + selectedRow * 20, 19, 19);
                 g.drawRect(3 + selectedCol * 20, 3 + selectedRow * 20, 17, 17);
                 g.setColor(Color.green);
-                for (int i = 0; i < legalMoves.size(); i++) {
-                    if (legalMoves.get(i).getFromCol() == selectedCol && legalMoves.get(i).getFromRow() == selectedRow)
-                        g.drawRect(2 + legalMoves.get(i).getToCol() * 20, 2 + legalMoves.get(i).getToRow() * 20, 19, 19);
+                for (Move m : legalMoves) {
+                    if (m.getFromCol() == selectedCol && m.getFromRow() == selectedRow)
+                        g.drawRect(2 + m.getToCol() * 20, 2 + m.getToRow() * 20, 19, 19);
                 }
             }
         }
-
     }
 
     public Dimension getPreferredSize() {
