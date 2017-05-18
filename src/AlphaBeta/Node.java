@@ -11,6 +11,9 @@ public class Node {
         this.key = key;
         this.move = m;
     }
+    Node() {
+        this.key = 0;
+    }
 
     public int getKey() {
         return this.key;

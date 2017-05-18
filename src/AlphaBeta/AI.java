@@ -47,13 +47,14 @@ public class AI {
             int eaten;
             ArrayList<Move> multipleEat;
             while (move != null) {
-                eaten = this.game.getBoard().getValueAt(Math.abs(move.getFromRow() - move.getToRow()), Math.abs(move.getFromCol() - move.getToCol()));
+                eaten = this.game.getBoard().getValueAt((move.getFromRow() + move.getToRow()) / 2,
+                        (move.getFromCol() + move.getToCol()) / 2);
                 if (eaten == Status.WHITE_PIECE_PROMOTED.getNumVal() || eaten == Status.BLACK_PIECE_PROMOTED.getNumVal()) {
-                    value += 3;
+                    value += 5;
                 } else {
-                    value += 2;
+                    value += 3;
                 }
-                multipleEat = game.getLegalJumps(player, move.getToRow(), move.getToCol());
+                multipleEat = game.getLegalEat(player, move.getToRow(), move.getToCol());
                 move = multipleEat.isEmpty() ? null : multipleEat.get(0);
             }
         } else {
@@ -86,7 +87,7 @@ public class AI {
         return max;
     }
 
-    public Node alphaBeta(ArrayList<Move> moves, int player, int round, MoveScheduler baseGame) {
+    public Node alphaBeta(int alpha, int beta, ArrayList<Move> moves, int player, int round, MoveScheduler baseGame) {
         MoveScheduler simulatorGame = new MoveScheduler();
         ArrayList<Node> scoredMoves = new ArrayList<>();
         Node best;
@@ -99,9 +100,6 @@ public class AI {
                     scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, -player)));
                     continue;
                 }
-                round--;
-                best = alphaBeta(nextRound, -player, round, simulatorGame);
-                scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, -player) - best.getKey()));
             } else {
                 scoredMoves.add(new Node(m, ScoreMove(m, baseGame, player)));
             }

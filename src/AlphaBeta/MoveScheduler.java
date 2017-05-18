@@ -37,7 +37,7 @@ public class MoveScheduler {
         ArrayList<Move> moves = new ArrayList<>();
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                moves.addAll(getLegalJumps(player, row, col));
+                moves.addAll(getLegalEat(player, row, col));
             }
         }
         if (moves.isEmpty()) {
@@ -91,7 +91,7 @@ public class MoveScheduler {
         }
     }
 
-    public ArrayList<Move> getLegalJumps(int player, int row, int col) {
+    public ArrayList<Move> getLegalEat(int player, int row, int col) {
         ArrayList<Move> moves = new ArrayList<>();
         if ((player < 0 && this.board.getValueAt(row, col) < 0) || (player > 0 && this.board.getValueAt(row, col) > 0)) {
             if (canEat(player, row, col, row + 1, col + 1, row + 2, col + 2)) {

@@ -107,7 +107,7 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
     private void doMakeMove(Move move) {
         board.makeMove(move);
         if (move.isEat()) {
-            legalMoves = board.getLegalJumps(currentPlayer, move.getToRow(), move.getToCol());
+            legalMoves = board.getLegalEat(currentPlayer, move.getToRow(), move.getToCol());
             if (!legalMoves.isEmpty()) {
                 if (currentPlayer == Status.WHITE.getNumVal()) {
                     message.setText("White: You must continue jumping.");
