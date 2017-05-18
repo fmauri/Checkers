@@ -14,11 +14,11 @@ public class MoveScheduler {
         this.test.newGame();
     }
 
-    public void makeMove(Move move) {
-        makeMove(move.getFromRow(), move.getFromCol(), move.getToRow(), move.getToCol());
+    public void applyMove(Move move) {
+        applyMove(move.getFromRow(), move.getFromCol(), move.getToRow(), move.getToCol());
     }
 
-    public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
+    public void applyMove(int fromRow, int fromCol, int toRow, int toCol) {
         this.board.setValueAt(toRow, toCol, this.board.getValueAt(fromRow, fromCol));
         this.board.setValueAt(fromRow, fromCol, Status.EMPTY.getNumVal());
         if (Math.abs(fromRow - toRow) == 2) {
@@ -27,9 +27,9 @@ public class MoveScheduler {
             this.board.setValueAt(jumpedRow, jumpedCol, Status.EMPTY.getNumVal());
         }
         if (toRow == 0 && this.board.getValueAt(toRow, toCol) == Status.WHITE.getNumVal()) {
-            this.board.setValueAt(toRow, toCol, Status.WHITE_PIECE_PROMOTED.getNumVal());
+            this.board.setValueAt(toRow, toCol, Status.WHITE_PROMOTED.getNumVal());
         } else if (toRow == 7 && this.board.getValueAt(toRow, toCol) == Status.BLACK.getNumVal()) {
-            this.board.setValueAt(toRow, toCol, Status.BLACK_PIECE_PROMOTED.getNumVal());
+            this.board.setValueAt(toRow, toCol, Status.BLACK_PROMOTED.getNumVal());
         }
     }
 
@@ -84,10 +84,10 @@ public class MoveScheduler {
         }
         if (player > 0) {
             return ((this.board.getValueAt(r1, c1) == Status.WHITE.getNumVal() && r2 < r1)
-                    || (this.board.getValueAt(r1, c1) == Status.WHITE_PIECE_PROMOTED.getNumVal()));
+                    || (this.board.getValueAt(r1, c1) == Status.WHITE_PROMOTED.getNumVal()));
         } else {
             return ((this.board.getValueAt(r1, c1) == Status.BLACK.getNumVal() && r2 > r1)
-                    || (this.board.getValueAt(r1, c1) == Status.BLACK_PIECE_PROMOTED.getNumVal()));
+                    || (this.board.getValueAt(r1, c1) == Status.BLACK_PROMOTED.getNumVal()));
         }
     }
 

@@ -26,7 +26,7 @@ public class AI {
         for (Move m : moves) {
             if (round > 0) {
                 simulatorGame.setBoard(baseGame.copyBoard(baseGame.getBoard()));
-                simulatorGame.makeMove(m);
+                simulatorGame.applyMove(m);
                 ArrayList<Move> nextRound = simulatorGame.getLegalMoves(-player);
                 if (nextRound.isEmpty()) {
                     scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, -player)));
@@ -49,7 +49,7 @@ public class AI {
             while (move != null) {
                 eaten = this.game.getBoard().getValueAt((move.getFromRow() + move.getToRow()) / 2,
                         (move.getFromCol() + move.getToCol()) / 2);
-                if (eaten == Status.WHITE_PIECE_PROMOTED.getNumVal() || eaten == Status.BLACK_PIECE_PROMOTED.getNumVal()) {
+                if (eaten == Status.WHITE_PROMOTED.getNumVal() || eaten == Status.BLACK_PROMOTED.getNumVal()) {
                     value += 5;
                 } else {
                     value += 3;
@@ -94,7 +94,7 @@ public class AI {
         for (Move m : moves) {
             if (round > 0) {
                 simulatorGame.setBoard(baseGame.copyBoard(baseGame.getBoard()));
-                simulatorGame.makeMove(m);
+                simulatorGame.applyMove(m);
                 ArrayList<Move> nextRound = simulatorGame.getLegalMoves(-player);
                 if (nextRound.isEmpty()) {
                     scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, -player)));

@@ -4,7 +4,7 @@ package AlphaBeta;
  * Created by Francesco Mauri on 5/14/2017.
  */
 public enum Status {
-    EMPTY(0), WHITE(1), BLACK(-1), WHITE_PIECE_PROMOTED(2), BLACK_PIECE_PROMOTED(-2);
+    EMPTY(0), WHITE(1), BLACK(-1), WHITE_PROMOTED(2), BLACK_PROMOTED(-2);
 
     private int numVal;
 
@@ -25,9 +25,9 @@ public enum Status {
             case -1:
                 return BLACK;
             case 2:
-                return WHITE_PIECE_PROMOTED;
+                return WHITE_PROMOTED;
             case -2:
-                return BLACK_PIECE_PROMOTED;
+                return BLACK_PROMOTED;
             default:
                 return EMPTY;
         }
@@ -41,9 +41,9 @@ public enum Status {
                 return 1;
             case BLACK:
                 return -1;
-            case WHITE_PIECE_PROMOTED:
+            case WHITE_PROMOTED:
                 return 2;
-            case BLACK_PIECE_PROMOTED:
+            case BLACK_PROMOTED:
                 return -2;
             default:
                 return 0;
