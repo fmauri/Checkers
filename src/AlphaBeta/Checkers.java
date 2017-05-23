@@ -20,7 +20,7 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
     private ArrayList<Move> legalMoves = new ArrayList<>();
     private boolean AI_White = false;
     private boolean AI_Black = true;
-    public int typeAI = 3; //0 -> Random, 1 -> RecursiveSearch, 2 -> MinMax, 3 - AlphaBetaPruning
+    public int typeAI = 1; //0 -> Random, 1 -> RecursiveSearch, 2 -> MinMax, 3 - AlphaBetaPruning
     private AI ai;
 
     public Checkers() {
@@ -107,9 +107,9 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
     }
 
     private void AImoves() {
-        int rounds = 6;
+        int rounds = 4;
         if (this.board.getBoard().countPieces(this.currentPlayer) <= 0) {
-            rounds = 10;
+            rounds = 6;
         }
         switch (typeAI) {
             case 0:

@@ -33,9 +33,9 @@ public class AI {
                     continue;
                 }
                 best = searchRecursive(nextRound, -player, round - 1, simulatorGame);
-                scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, player) - best.getKey() + simulatorGame.getBoard().countPieces(player)));
+                scoredMoves.add(new Node(m, simulatorGame.getBoard().countPieces(player) - best.getKey()));
             } else {
-                scoredMoves.add(new Node(m, ScoreMove(m, baseGame, player) + simulatorGame.getBoard().countPieces(player)));
+                scoredMoves.add(new Node(m, simulatorGame.getBoard().countPieces(player)));
             }
         }
         return getMaxNode(scoredMoves);
