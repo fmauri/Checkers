@@ -17,9 +17,10 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
     public boolean gameInProgress;
     public int currentPlayer;
     public int selectedRow, selectedCol;
-    public ArrayList<Move> legalMoves = new ArrayList<>();
+    private ArrayList<Move> legalMoves = new ArrayList<>();
     private boolean AI_White = false;
     private boolean AI_Black = true;
+    public int typeAI = 3; //0 -> Random, 1 -> RecursiveSearch, 2 -> MinMax, 3 - AlphaBetaPruning
     private AI ai;
 
     public Checkers() {
@@ -79,8 +80,8 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
     }
 
     private void doClickSquare(int row, int col) {
-        for (int i = 0; i < legalMoves.size(); i++)
-            if (legalMoves.get(i).getFromRow() == row && legalMoves.get(i).getFromCol() == col) {
+        for (Move lm : legalMoves) {
+            if (lm.getFromRow() == row && lm.getFromCol() == col) {
                 selectedRow = row;
                 selectedCol = col;
                 if (currentPlayer == Status.WHITE.getNumVal())
@@ -90,25 +91,52 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
                 repaint();
                 return;
             }
+        }
         if (selectedRow < 0) {
             message.setText("Click the piece you want to move.");
             return;
         }
-        for (int i = 0; i < legalMoves.size(); i++)
-            if (legalMoves.get(i).getFromRow() == selectedRow && legalMoves.get(i).getFromCol() == selectedCol
-                    && legalMoves.get(i).getToRow() == row && legalMoves.get(i).getToCol() == col) {
-                makeMove(legalMoves.get(i));
+        for (Move lm : legalMoves) {
+            if (lm.getFromRow() == selectedRow && lm.getFromCol() == selectedCol
+                    && lm.getToRow() == row && lm.getToCol() == col) {
+                makeMove(lm);
                 return;
             }
+        }
         message.setText("Click the square you want to move to.");
+    }
 
+    private void AImoves() {
+        int rounds = 6;
+        if (this.board.getBoard().countPieces(this.currentPlayer) <= 0) {
+            rounds = 10;
+        }
+        switch (typeAI) {
+            case 0:
+                makeMove(this.ai.chooseMoveRandom(this.legalMoves));
+                break;
+            case 1:
+                makeMove(this.ai.searchRecursive(this.legalMoves, this.currentPlayer, rounds, this.board).getMove());
+                break;
+            case 2:
+                makeMove(this.ai.minMax(this.legalMoves, this.currentPlayer, rounds, this.board).getMove());
+                break;
+            case 3:
+                makeMove(this.ai.alphaBetaPruning(this.legalMoves, this.currentPlayer, rounds, this.board,
+                        new Node(null, Integer.MIN_VALUE), new Node(null, Integer.MAX_VALUE)).getMove());
+                break;
+            default:
+                makeMove(this.ai.alphaBetaPruning(this.legalMoves, this.currentPlayer, rounds, this.board,
+                        new Node(null, Integer.MIN_VALUE), new Node(null, Integer.MAX_VALUE)).getMove());
+                break;
+        }
     }
 
     private void makeMove(Move move) {
         board.applyMove(move);
         if (move.isEat()) {
-            legalMoves = board.getLegalEat(currentPlayer, move.getToRow(), move.getToCol());
-            if (!legalMoves.isEmpty()) {
+            this.legalMoves = board.getLegalEat(currentPlayer, move.getToRow(), move.getToCol());
+            if (!this.legalMoves.isEmpty()) {
                 if (currentPlayer == Status.WHITE.getNumVal()) {
                     message.setText("White: You must continue jumping.");
                 } else {
@@ -118,13 +146,7 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
                 selectedCol = move.getToCol();
                 repaint();
                 if ((AI_Black && this.currentPlayer < 0) || (AI_White && this.currentPlayer > 0)) {
-                    int rounds = 5;
-                    if ((this.board.getBoard().isBlackWinning() && this.AI_White)
-                            || (!this.board.getBoard().isBlackWinning() && this.AI_Black)) {
-                        rounds = 9;
-                    }
-                    makeMove(this.ai.minMaxRecursive(legalMoves, this.currentPlayer, rounds, this.board).getMove());
-                    //makeMove(this.ai.chooseMoveRandom(legalMoves));
+                    AImoves();
                 }
                 return;
             }
@@ -166,13 +188,7 @@ public class Checkers extends Canvas implements ActionListener, MouseListener {
         repaint();
         legalMoves = board.getLegalMoves(currentPlayer);
         if (!legalMoves.isEmpty() && (AI_Black && this.currentPlayer < 0) || (AI_White && this.currentPlayer > 0)) {
-            int rounds = 5;
-            if ((this.board.getBoard().isBlackWinning() && this.AI_White)
-                    || (!this.board.getBoard().isBlackWinning() && this.AI_Black)) {
-                rounds = 9;
-            }
-            makeMove(this.ai.minMaxRecursive(legalMoves, this.currentPlayer, rounds, this.board).getMove());
-            //makeMove(this.ai.chooseMoveRandom(legalMoves));
+            AImoves();
         }
     }
 

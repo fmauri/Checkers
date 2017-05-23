@@ -40,18 +40,18 @@ public class Board {
         return board;
     }
 
-    public boolean isBlackWinning() {
+    public int countPieces(int player) {
         int w = 0;
         int b = 0;
         for (int row = 0; row < this.board.length; row++) {
             for (int col = 0; col < this.board[row].length; col++) {
-                if(this.board[row][col]>0){
-                    w++;
-                }else{
-                    b++;
+                if (this.board[row][col] > 0) {
+                    w = this.board[row][col] == 1 ? w + 1 : w + 3;
+                } else if (this.board[row][col] < 0) {
+                    b = this.board[row][col] == -1 ? b + 1 : b + 3;
                 }
             }
         }
-        return b>w;
+        return player > 0 ? w - b : b - w;
     }
 }

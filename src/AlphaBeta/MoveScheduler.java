@@ -70,8 +70,7 @@ public class MoveScheduler {
         if ((player > 0) && ((this.board.getValueAt(r1, c1) == Status.WHITE.getNumVal() && r3 > r1)
                 || this.board.getValueAt(r2, c2) >= 0)) {
             return false;
-        }
-        if ((player < 0) && ((this.board.getValueAt(r1, c1) == Status.BLACK.getNumVal() && r3 < r1)
+        } else if ((player < 0) && ((this.board.getValueAt(r1, c1) == Status.BLACK.getNumVal() && r3 < r1)
                 || this.board.getValueAt(r2, c2) <= 0)) {
             return false;
         }
