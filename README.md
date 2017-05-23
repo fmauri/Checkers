@@ -1,5 +1,4 @@
 # Checkers
-Artificial Intelligence Lab 3
 
 Task Objectives:
 
