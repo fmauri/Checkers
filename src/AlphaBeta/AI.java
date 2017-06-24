@@ -33,9 +33,9 @@ public class AI {
                     continue;
                 }
                 best = searchRecursive(nextRound, -player, round - 1, simulatorGame);
-                scoredMoves.add(new Node(m, simulatorGame.getBoard().countPieces(player) - best.getKey()));
+                scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, player) - best.getKey()));
             } else {
-                scoredMoves.add(new Node(m, simulatorGame.getBoard().countPieces(player)));
+                scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, player)));
             }
         }
         return getMaxNode(scoredMoves);
@@ -154,25 +154,5 @@ public class AI {
             }
         }
         return min;
-    }
-
-    public Node alphaBeta(int alpha, int beta, ArrayList<Move> moves, int player, int round, MoveScheduler baseGame) {
-        MoveScheduler simulatorGame = new MoveScheduler();
-        ArrayList<Node> scoredMoves = new ArrayList<>();
-        Node best;
-        for (Move m : moves) {
-            if (round > 0) {
-                simulatorGame.setBoard(baseGame.copyBoard(baseGame.getBoard()));
-                simulatorGame.applyMove(m);
-                ArrayList<Move> nextRound = simulatorGame.getLegalMoves(-player);
-                if (nextRound.isEmpty()) {
-                    scoredMoves.add(new Node(m, ScoreMove(m, simulatorGame, -player)));
-                    continue;
-                }
-            } else {
-                scoredMoves.add(new Node(m, ScoreMove(m, baseGame, player)));
-            }
-        }
-        return getMaxNode(scoredMoves);
     }
 }
